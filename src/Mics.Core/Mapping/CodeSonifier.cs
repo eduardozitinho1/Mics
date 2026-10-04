@@ -6,59 +6,99 @@ using Mics.Core.Score;
 
 namespace Mics.Core.Mapping;
 
+/// <summary>
+/// Walks a C# syntax tree and produces a <see cref="Composition"/>.
+/// </summary>
+/// <remarks>
+/// Each type declaration (class, struct, record, interface, enum) opens a new voice.
+/// Method bodies and control-flow nodes inside that type emit musical events into the
+/// currently active voice. Nested types push a new voice on top of the stack and pop
+/// back to the parent when their declaration ends, so events are always attributed to
+/// the correct enclosing scope.
+/// </remarks>
 public sealed class CodeSonifier : CSharpSyntaxWalker
 {
     private readonly SonifierOptions _options;
-    private readonly List<VoiceBuilder> _allVoices = new();
-    private readonly VoiceBuilder _root = new("Program");
-    private VoiceBuilder? _current;
+    private readonly List<VoiceBuilder> _completedVoices = new();
+    private readonly Stack<VoiceBuilder> _stack = new();
+    private VoiceBuilder? _root;
 
     public CodeSonifier(SonifierOptions options)
     {
-        _options = options;
-        _current = _root;
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    public Composition Build()
+    {
+        var voices = new List<Voice>();
+        var index = 0;
+
+        if (_root is not null && _root.Notes.Count > 0)
+        {
+            voices.Add(_root.Build(PickInstrument(index)));
+            index++;
+        }
+
+        foreach (var v in _completedVoices)
+        {
+            voices.Add(v.Build(PickInstrument(index)));
+            index++;
+        }
+
+        return new Composition(_options.TempoBpm, voices);
     }
 
     public override void VisitCompilationUnit(CompilationUnitSyntax node)
     {
+        _root = new VoiceBuilder("Program");
+        _stack.Push(_root);
         base.VisitCompilationUnit(node);
-        if (_current == _root)
-            _current = null;
+        _stack.Pop();
     }
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {
-        PushVoice($"class {node.Identifier.Text}");
+        var voice = new VoiceBuilder($"class {node.Identifier.Text}");
+        _stack.Push(voice);
         base.VisitClassDeclaration(node);
-        PopVoice();
+        _stack.Pop();
+        _completedVoices.Add(voice);
     }
 
     public override void VisitStructDeclaration(StructDeclarationSyntax node)
     {
-        PushVoice($"struct {node.Identifier.Text}");
+        var voice = new VoiceBuilder($"struct {node.Identifier.Text}");
+        _stack.Push(voice);
         base.VisitStructDeclaration(node);
-        PopVoice();
+        _stack.Pop();
+        _completedVoices.Add(voice);
     }
 
     public override void VisitRecordDeclaration(RecordDeclarationSyntax node)
     {
-        PushVoice($"record {node.Identifier.Text}");
+        var voice = new VoiceBuilder($"record {node.Identifier.Text}");
+        _stack.Push(voice);
         base.VisitRecordDeclaration(node);
-        PopVoice();
+        _stack.Pop();
+        _completedVoices.Add(voice);
     }
 
     public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
     {
-        PushVoice($"interface {node.Identifier.Text}");
+        var voice = new VoiceBuilder($"interface {node.Identifier.Text}");
+        _stack.Push(voice);
         base.VisitInterfaceDeclaration(node);
-        PopVoice();
+        _stack.Pop();
+        _completedVoices.Add(voice);
     }
 
     public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
     {
-        PushVoice($"enum {node.Identifier.Text}");
+        var voice = new VoiceBuilder($"enum {node.Identifier.Text}");
+        _stack.Push(voice);
         base.VisitEnumDeclaration(node);
-        PopVoice();
+        _stack.Pop();
+        _completedVoices.Add(voice);
     }
 
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
@@ -209,60 +249,33 @@ public sealed class CodeSonifier : CSharpSyntaxWalker
         base.VisitLiteralExpression(node);
     }
 
-    public Composition Build()
-    {
-        var voices = new List<Voice>();
-        var index = 0;
-
-        if (_root.Notes.Count > 0)
-        {
-            voices.Add(_root.Build(PickInstrument(index)));
-            index++;
-        }
-
-        foreach (var v in _allVoices)
-        {
-            voices.Add(v.Build(PickInstrument(index)));
-            index++;
-        }
-
-        return new Composition(_options.TempoBpm, voices);
-    }
-
     private Instrument PickInstrument(int index)
         => _options.Instrument ?? Instruments.All[index % Instruments.All.Count];
 
-    private void PushVoice(string name)
-    {
-        var voice = new VoiceBuilder(name);
-        _allVoices.Add(voice);
-        _current = voice;
-    }
-
-    private void PopVoice()
-    {
-        _current = null;
-    }
+    private VoiceBuilder? Current => _stack.Count > 0 ? _stack.Peek() : null;
 
     private void DepthUp()
     {
-        if (_current is not null) _current.Depth++;
+        var v = Current;
+        if (v is not null) v.Depth++;
     }
 
     private void DepthDown()
     {
-        if (_current is not null) _current.Depth--;
+        var v = Current;
+        if (v is not null) v.Depth--;
     }
 
     private void Emit(int scaleIndex, double beats, double velocity = 0.7)
     {
-        if (_current is null) return;
+        var current = Current;
+        if (current is null) return;
 
-        var octave = Math.Clamp(5 - _current.Depth, 2, 7);
+        var octave = Math.Clamp(5 - current.Depth, 2, 7);
         var freq = Scales.Frequency(_options.Scale, scaleIndex, octave);
         var duration = beats * _options.BeatSeconds;
 
-        _current.Emit(new Note(freq, 0, duration, velocity));
+        current.Emit(new Note(freq, 0, duration, velocity));
     }
 
     private sealed class VoiceBuilder
