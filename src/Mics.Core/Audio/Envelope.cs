@@ -2,17 +2,16 @@ namespace Mics.Core.Audio;
 
 public static class Envelope
 {
-    public static double Adsr(
-        double t,
-        double total,
-        double attack = 0.01,
-        double decay = 0.05,
-        double sustain = 0.7,
-        double release = 0.1)
+    public static double Evaluate(double t, double total, EnvelopeParams env)
     {
-        if (t < 0) return 0;
-        if (total <= 0) return 0;
-        if (release > total) release = total * 0.4;
+        if (t < 0 || total <= 0) return 0;
+
+        var attack = env.Attack;
+        var decay = env.Decay;
+        var sustain = env.Sustain;
+        var release = env.Release;
+
+        if (release > total * 0.4) release = total * 0.4;
 
         if (t < attack)
             return t / attack;
@@ -26,7 +25,8 @@ public static class Envelope
         if (t < total - release)
             return sustain;
 
-        var k2 = Math.Max(0, (total - t) / release);
-        return sustain * k2;
+        var remaining = total - t;
+        if (remaining <= 0) return 0;
+        return sustain * (remaining / release);
     }
 }

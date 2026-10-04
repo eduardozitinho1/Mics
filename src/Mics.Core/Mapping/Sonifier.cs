@@ -5,18 +5,19 @@ namespace Mics.Core.Mapping;
 
 public static class Sonifier
 {
-    public static IReadOnlyList<Note> SonifySource(string sourceCode)
+    public static Composition SonifySource(string sourceCode, SonifierOptions? options = null)
     {
+        var opts = options ?? new SonifierOptions();
         var tree = CSharpSyntaxTree.ParseText(sourceCode);
         var root = tree.GetRoot();
-        var visitor = new CodeSonifier();
+        var visitor = new CodeSonifier(opts);
         visitor.Visit(root);
-        return visitor.Notes;
+        return visitor.Build();
     }
 
-    public static IReadOnlyList<Note> SonifyFile(string path)
+    public static Composition SonifyFile(string path, SonifierOptions? options = null)
     {
         var text = File.ReadAllText(path);
-        return SonifySource(text);
+        return SonifySource(text, options);
     }
 }

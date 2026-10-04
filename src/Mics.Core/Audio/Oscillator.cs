@@ -2,18 +2,16 @@ namespace Mics.Core.Audio;
 
 public static class Oscillator
 {
-    public static double Sine(double phase)
-        => Math.Sin(2 * Math.PI * phase);
-
-    public static double Square(double phase)
-        => Math.Sin(2 * Math.PI * phase) >= 0 ? 1.0 : -1.0;
-
-    public static double Triangle(double phase)
+    public static double Sample(Waveform waveform, double phase)
     {
-        var x = phase - Math.Floor(phase + 0.5);
-        return 4 * Math.Abs(x) - 1;
+        var cycle = phase - Math.Floor(phase);
+        return waveform switch
+        {
+            Waveform.Sine => Math.Sin(2 * Math.PI * cycle),
+            Waveform.Triangle => 4 * Math.Abs(cycle - 0.5) - 1,
+            Waveform.Square => cycle < 0.5 ? 1.0 : -1.0,
+            Waveform.Sawtooth => 2 * cycle - 1,
+            _ => 0,
+        };
     }
-
-    public static double Sawtooth(double phase)
-        => 2 * (phase - Math.Floor(phase + 0.5));
 }
