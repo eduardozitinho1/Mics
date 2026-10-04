@@ -5,7 +5,12 @@ public static class WavWriter
     public static void Write(string path, double[] samples, int sampleRate = Renderer.DefaultSampleRate)
     {
         using var fs = File.Create(path);
-        using var bw = new BinaryWriter(fs);
+        Write(fs, samples, sampleRate);
+    }
+
+    public static void Write(Stream stream, double[] samples, int sampleRate = Renderer.DefaultSampleRate)
+    {
+        using var bw = new BinaryWriter(stream, System.Text.Encoding.UTF8, leaveOpen: true);
 
         const short channels = 1;
         const short bitsPerSample = 16;
