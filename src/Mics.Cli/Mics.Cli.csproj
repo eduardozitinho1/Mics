@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageId>Mics.Cli</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Eduardo Zitinho</Authors>
     <Description>Music In C Sharp. Turn C# source code into music.</Description>
     <PackageTags>music;audio;sonification;code;csharp;cli;tool</PackageTags>

@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -35,8 +37,21 @@ jobs:
       - name: Test
         run: dotnet test --no-build -c Release --verbosity normal
 
-      - name: Pack
+      - name: Pack Mics.Core
+        run: dotnet pack src/Mics.Core/Mics.Core.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
+
+      - name: Pack Mics.Cli
         run: dotnet pack src/Mics.Cli/Mics.Cli.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
+
+      - name: Generate changelog with git-cliff
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          OUTPUT: RELEASE_NOTES.md
+          GITHUB_REPO: ${{ github.repository }}
 
       - name: NuGet login (OIDC)
         uses: NuGet/login@v1
@@ -50,5 +65,5 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          body_path: RELEASE_NOTES.md
           files: ./artifacts/*.nupkg
-          generate_release_notes: true
