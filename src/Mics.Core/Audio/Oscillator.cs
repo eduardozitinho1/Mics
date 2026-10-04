@@ -1,6 +1,6 @@
 namespace Mics.Core.Audio;
 
-public static class Oscillator
+internal static class Oscillator
 {
     public static double Sample(Waveform waveform, double phase)
     {

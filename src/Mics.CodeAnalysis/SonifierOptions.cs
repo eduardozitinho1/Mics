@@ -1,12 +1,16 @@
 using Mics.Core.Audio;
+using Mics.Core.Mapping;
 
-namespace Mics.Core.Mapping;
+namespace Mics;
 
+/// <summary>
+/// Options that control how C# source is mapped to music.
+/// </summary>
 public sealed record SonifierOptions
 {
     private readonly double _tempoBpm = 120;
 
-    /// <summary>Musical scale used to map nodes to pitches.</summary>
+    /// <summary>Musical scale used to map syntax nodes to pitches.</summary>
     public Scale Scale { get; init; } = Scales.Major;
 
     /// <summary>

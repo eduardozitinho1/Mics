@@ -1,3 +1,4 @@
+using Mics;
 using System.Globalization;
 using System.Reflection;
 using Mics.Core.Audio;
@@ -124,12 +125,10 @@ if (composition.Voices.Count == 0 || totalNotes == 0)
     return 2;
 }
 
-var samples = Renderer.Render(composition);
-var duration = (double)samples.Length / Renderer.DefaultSampleRate;
-Console.WriteLine($"Length:      {duration:F1}s");
+Console.WriteLine($"Length:      {composition.DurationSeconds:F1}s");
 Console.WriteLine($"Output:      {output}");
 
-WavWriter.Write(output, samples);
+Sound.Save(composition, output);
 Console.WriteLine("Done.");
 return 0;
 

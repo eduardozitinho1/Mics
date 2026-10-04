@@ -4,7 +4,7 @@ namespace Mics.Core.Audio;
 /// ADSR envelope evaluation. Given a time <c>t</c> inside a note of total duration <c>total</c>,
 /// returns the amplitude multiplier in [0, 1].
 /// </summary>
-public static class Envelope
+internal static class Envelope
 {
     /// <summary>
     /// Evaluates the envelope at time <paramref name="t"/> within a note of duration <paramref name="total"/>.

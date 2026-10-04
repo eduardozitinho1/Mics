@@ -1,6 +1,6 @@
 namespace Mics.Core.Audio;
 
-public static class WavWriter
+internal static class WavWriter
 {
     public static void Write(string path, double[] samples, int sampleRate = Renderer.DefaultSampleRate)
     {

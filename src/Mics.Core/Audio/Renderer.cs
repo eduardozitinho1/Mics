@@ -2,33 +2,12 @@ using Mics.Core.Score;
 
 namespace Mics.Core.Audio;
 
-/// <summary>
-/// Mixes every voice of a <see cref="Composition"/> into a single PCM buffer.
-/// </summary>
-/// <remarks>
-/// The output is a mono signal at the requested sample rate, normalized so the peak
-/// amplitude stays within [-1, 1]. If the raw mix already fits inside that range, no
-/// scaling is applied.
-/// </remarks>
-public static class Renderer
+internal static class Renderer
 {
-    /// <summary>Default sample rate used when none is specified.</summary>
     public const int DefaultSampleRate = 22050;
-
-    /// <summary>Minimum allowed sample rate.</summary>
     public const int MinSampleRate = 8000;
-
-    /// <summary>Maximum allowed sample rate.</summary>
     public const int MaxSampleRate = 192000;
 
-    /// <summary>
-    /// Renders the composition into PCM samples.
-    /// </summary>
-    /// <param name="composition">The composition to render.</param>
-    /// <param name="sampleRate">Samples per second. Must be between <see cref="MinSampleRate"/> and <see cref="MaxSampleRate"/>.</param>
-    /// <returns>An array of PCM samples in [-1, 1].</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="composition"/> is null.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="sampleRate"/> is outside the supported range.</exception>
     public static double[] Render(Composition composition, int sampleRate = DefaultSampleRate)
     {
         ArgumentNullException.ThrowIfNull(composition);

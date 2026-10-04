@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Mics</RootNamespace>
-    <AssemblyName>Mics.Core</AssemblyName>
+    <AssemblyName>Mics.CodeAnalysis</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Mics.Core</PackageId>
+    <PackageId>Mics.CodeAnalysis</PackageId>
     <Version>1.0.0</Version>
     <Authors>Eduardo Zitinho</Authors>
-    <Description>Fluent sound composition library. Build tones, melodies, chords, and multi-voice songs from plain C#.</Description>
-    <PackageTags>music;audio;sound;compose;wav;synthesis</PackageTags>
+    <Description>Turn C# source code into music. Roslyn-based parser and mapper for the Mics ecosystem.</Description>
+    <PackageTags>music;audio;sonification;code;csharp;roslyn</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/eduardozitinho1/Mics</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -26,7 +26,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Mics.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Mics.Core/Mics.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

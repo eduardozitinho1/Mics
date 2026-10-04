@@ -11,9 +11,7 @@ public sealed class SongBuilder
     private readonly List<(string Name, Track Track)> _voices = new();
     private double _tempo = 120.0;
 
-    /// <summary>
-    /// Sets the global tempo in beats per minute. Must be a positive, finite value.
-    /// </summary>
+    /// <summary>Sets the global tempo in beats per minute. Must be a positive, finite value.</summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bpm"/> is not positive or not finite.</exception>
     public SongBuilder Tempo(double bpm)
     {
@@ -58,11 +56,11 @@ public sealed class SongBuilder
     }
 
     /// <summary>Returns the mixed PCM samples for the whole song.</summary>
-    public double[] ToSamples(int sampleRate = Renderer.DefaultSampleRate)
+    public double[] ToSamples(int sampleRate = Sound.DefaultSampleRate)
         => Renderer.Render(ToComposition(), sampleRate);
 
     /// <summary>Returns the song encoded as a WAV file in memory.</summary>
-    public byte[] ToWavBytes(int sampleRate = Renderer.DefaultSampleRate)
+    public byte[] ToWavBytes(int sampleRate = Sound.DefaultSampleRate)
     {
         var samples = ToSamples(sampleRate);
         using var ms = new MemoryStream();

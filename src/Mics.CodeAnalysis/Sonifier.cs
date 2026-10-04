@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Mics.Core.Score;
 
-namespace Mics.Core.Mapping;
+namespace Mics;
 
 public static class Sonifier
 {

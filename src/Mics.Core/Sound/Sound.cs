@@ -1,3 +1,6 @@
+using Mics.Core.Audio;
+using Mics.Core.Score;
+
 namespace Mics;
 
 /// <summary>
@@ -15,6 +18,9 @@ namespace Mics;
 /// </remarks>
 public static class Sound
 {
+    /// <summary>Default sample rate used when none is specified.</summary>
+    public const int DefaultSampleRate = 22050;
+
     /// <summary>Starts a new track with a single note.</summary>
     public static Track Note(string name, double beats = 1.0)
         => new Track().Note(name, beats);
@@ -42,4 +48,24 @@ public static class Sound
 
     /// <summary>Starts a new multi-voice song.</summary>
     public static SongBuilder Song() => new();
+
+    /// <summary>Renders a composition to raw PCM samples.</summary>
+    public static double[] ToSamples(Composition composition, int sampleRate = DefaultSampleRate)
+        => Renderer.Render(composition, sampleRate);
+
+    /// <summary>Renders a composition to a WAV byte array in memory.</summary>
+    public static byte[] ToWavBytes(Composition composition, int sampleRate = DefaultSampleRate)
+    {
+        var samples = ToSamples(composition, sampleRate);
+        using var ms = new MemoryStream();
+        WavWriter.Write(ms, samples, sampleRate);
+        return ms.ToArray();
+    }
+
+    /// <summary>Renders a composition and writes it to a WAV file.</summary>
+    public static void Save(Composition composition, string path, int sampleRate = DefaultSampleRate)
+    {
+        var samples = ToSamples(composition, sampleRate);
+        WavWriter.Write(path, samples, sampleRate);
+    }
 }

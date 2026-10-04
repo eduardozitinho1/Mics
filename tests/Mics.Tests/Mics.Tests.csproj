@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Mics.Core/Mics.Core.csproj" />
+    <ProjectReference Include="../../src/Mics.CodeAnalysis/Mics.CodeAnalysis.csproj" />
   </ItemGroup>
 
 </Project>

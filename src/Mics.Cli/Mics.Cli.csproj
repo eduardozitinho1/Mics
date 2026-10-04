@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageId>Mics.Cli</PackageId>
-    <Version>0.4.0</Version>
+    <Version>1.0.0</Version>
     <Authors>Eduardo Zitinho</Authors>
     <Description>Music In C Sharp. Turn C# source code into music.</Description>
     <PackageTags>music;audio;sonification;code;csharp;cli;tool</PackageTags>
@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Mics.Core/Mics.Core.csproj" />
+    <ProjectReference Include="../Mics.CodeAnalysis/Mics.CodeAnalysis.csproj" />
   </ItemGroup>
 
   <ItemGroup>

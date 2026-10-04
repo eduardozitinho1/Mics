@@ -2,9 +2,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Mics.Core.Audio;
+using Mics.Core.Mapping;
 using Mics.Core.Score;
 
-namespace Mics.Core.Mapping;
+namespace Mics;
 
 /// <summary>
 /// Walks a C# syntax tree and produces a <see cref="Composition"/>.
@@ -16,7 +17,7 @@ namespace Mics.Core.Mapping;
 /// back to the parent when their declaration ends, so events are always attributed to
 /// the correct enclosing scope.
 /// </remarks>
-public sealed class CodeSonifier : CSharpSyntaxWalker
+internal sealed class CodeSonifier : CSharpSyntaxWalker
 {
     private readonly SonifierOptions _options;
     private readonly List<VoiceBuilder> _completedVoices = new();

@@ -1,3 +1,4 @@
+using Mics;
 using Mics.Core.Mapping;
 using Xunit;
 

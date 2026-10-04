@@ -25,9 +25,7 @@ public sealed class Track
 
     private double BeatsToSeconds(double beats) => beats * 60.0 / _tempo;
 
-    /// <summary>
-    /// Sets the tempo in beats per minute. Must be a positive, finite value.
-    /// </summary>
+    /// <summary>Sets the tempo in beats per minute. Must be a positive, finite value.</summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bpm"/> is not positive or not finite.</exception>
     public Track Bpm(double bpm)
     {
@@ -47,9 +45,7 @@ public sealed class Track
         return this;
     }
 
-    /// <summary>
-    /// Appends a single note for the given number of beats.
-    /// </summary>
+    /// <summary>Appends a single note for the given number of beats.</summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beats"/> is not positive or not finite.</exception>
     public Track Note(string name, double beats = 1.0)
     {
@@ -83,9 +79,7 @@ public sealed class Track
         return this;
     }
 
-    /// <summary>
-    /// Advances time without producing a sound.
-    /// </summary>
+    /// <summary>Advances time without producing a sound.</summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beats"/> is negative or not finite.</exception>
     public Track Rest(double beats = 1.0)
     {
@@ -108,11 +102,11 @@ public sealed class Track
     }
 
     /// <summary>Returns the raw PCM samples for this track.</summary>
-    public double[] ToSamples(int sampleRate = Renderer.DefaultSampleRate)
+    public double[] ToSamples(int sampleRate = Sound.DefaultSampleRate)
         => Renderer.Render(ToComposition(), sampleRate);
 
     /// <summary>Returns the track encoded as a WAV file in memory.</summary>
-    public byte[] ToWavBytes(int sampleRate = Renderer.DefaultSampleRate)
+    public byte[] ToWavBytes(int sampleRate = Sound.DefaultSampleRate)
     {
         var samples = ToSamples(sampleRate);
         using var ms = new MemoryStream();
