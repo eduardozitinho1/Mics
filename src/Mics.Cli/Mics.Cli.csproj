@@ -9,8 +9,24 @@
     <ToolCommandName>mics</ToolCommandName>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Mics.Cli</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Eduardo Zitinho</Authors>
+    <Description>Music In C Sharp. Turn C# source code into music.</Description>
+    <PackageTags>music;audio;sonification;code;csharp;cli;tool</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/eduardozitinho1/Mics</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../Mics.Core/Mics.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
