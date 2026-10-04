@@ -40,6 +40,9 @@ jobs:
       - name: Pack Mics.Core
         run: dotnet pack src/Mics.Core/Mics.Core.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
 
+      - name: Pack Mics.CodeAnalysis
+        run: dotnet pack src/Mics.CodeAnalysis/Mics.CodeAnalysis.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
+
       - name: Pack Mics.Cli
         run: dotnet pack src/Mics.Cli/Mics.Cli.csproj --no-build -c Release -p:Version=${{ steps.version.outputs.VERSION }} -o ./artifacts
 
