@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Mics.Cli/Mics.Cli.csproj" />
+    <Project Path="src/Mics.Core/Mics.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Mics.Tests/Mics.Tests.csproj" />
+  </Folder>
+</Solution>
