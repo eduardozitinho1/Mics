@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>Mics.Core</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>Eduardo Zitinho</Authors>
     <Description>Fluent sound composition library. Build tones, melodies, chords, and multi-voice songs from plain C#.</Description>
     <PackageTags>music;audio;sound;compose;wav;synthesis;sonification</PackageTags>
@@ -16,6 +16,13 @@
     <RepositoryUrl>https://github.com/eduardozitinho1/Mics</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

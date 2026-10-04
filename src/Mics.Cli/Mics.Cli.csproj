@@ -11,7 +11,7 @@
 
   <PropertyGroup>
     <PackageId>Mics.Cli</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>Eduardo Zitinho</Authors>
     <Description>Music In C Sharp. Turn C# source code into music.</Description>
     <PackageTags>music;audio;sonification;code;csharp;cli;tool</PackageTags>
@@ -19,6 +19,13 @@
     <RepositoryUrl>https://github.com/eduardozitinho1/Mics</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

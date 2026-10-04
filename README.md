@@ -1,22 +1,28 @@
 # Mics
 
-Music In C Sharp. Turn C# code into music, or use the fluent API to compose sound from your own code.
+Music In C Sharp. Turn C# source code into music, or use the fluent API to compose sound from your own code.
 
 ## Install
 
 CLI tool:
 
-    dotnet tool install -g Mics.Cli
+```bash
+dotnet tool install -g Mics.Cli
+```
 
 Library:
 
-    dotnet add package Mics.Core
+```bash
+dotnet add package Mics.Core
+```
 
 ## CLI
 
-    mics compose <input.cs> -o <output.wav> [options]
-    mics scales
-    mics instruments
+```bash
+mics compose <input.cs> -o <output.wav> [options]
+mics scales
+mics instruments
+```
 
 Options:
 
@@ -24,11 +30,14 @@ Options:
 - `--scale <name>` — major, minor, dorian, mixolydian, pentatonic, blues
 - `--tempo <bpm>` — beats per minute (default: 120)
 - `--instrument <name>` — sine, triangle, square, sawtooth
+- `-v, --version` — show version and exit
 
 Examples:
 
-    mics compose samples/Hello.cs -o hello.wav
-    mics compose samples/Hello.cs -o hello-minor.wav --scale minor --tempo 90
+```bash
+mics compose samples/Hello.cs -o hello.wav
+mics compose samples/Hello.cs -o hello-minor.wav --scale minor --tempo 90
+```
 
 ## Library
 
@@ -79,11 +88,31 @@ Scientific pitch notation. Enharmonic equivalents normalize.
 
 - `C4`, `A#3`, `Bb5`, `Db2`
 - Case-insensitive: `c4` equals `C4`
-- `Bb3` equals `A#3` equals `A#3`
+- `Bb3` equals `A#3`
+
+MIDI numbers 0-127 are the canonical internal representation, so `NoteName.FromMidi(60)` returns middle C.
+
+## Instruments
+
+Four built-in waveforms, each with its own ADSR envelope:
+
+- `sine` — pure tone, gentle attack
+- `triangle` — softer harmonics, flute-like
+- `square` — hollow, retro
+- `sawtooth` — bright, buzzy
+
+## Scales
+
+- `major` — bright, resolved
+- `minor` — melancholic
+- `dorian` — jazzy
+- `mixolydian` — bluesy rock
+- `pentatonic` — safe, pleasant
+- `blues` — gritty
 
 ## How it works
 
-CLI mode parses C# with Roslyn, walks the syntax tree, and maps each node to a musical event. Each class becomes a voice with its own timeline; voices play in parallel.
+CLI mode parses C# with Roslyn, walks the syntax tree, and maps each node to a musical event. Each type declaration (class, struct, record, interface, enum) becomes a voice with its own timeline; voices play in parallel.
 
 Library mode skips the parser entirely. You write the notes. The library handles timing, instruments, mixing, and WAV synthesis.
 
