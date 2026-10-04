@@ -14,9 +14,14 @@ public sealed class Track
     private double _tempo = 120.0;
     private Instrument? _explicitInstrument;
 
-    internal IReadOnlyList<ScoreNote> Notes => _notes;
-    internal double Tempo => _tempo;
-    internal Instrument? ExplicitInstrument => _explicitInstrument;
+    /// <summary>The notes added so far, in chronological order.</summary>
+    public IReadOnlyList<ScoreNote> Notes => _notes;
+
+    /// <summary>The tempo in beats per minute.</summary>
+    public double Tempo => _tempo;
+
+    /// <summary>The instrument explicitly set for this track, or null to use the default.</summary>
+    public Instrument? ExplicitInstrument => _explicitInstrument;
 
     private double BeatsToSeconds(double beats) => beats * 60.0 / _tempo;
 
@@ -71,15 +76,11 @@ public sealed class Track
     /// <summary>Total duration of this track in seconds.</summary>
     public double DurationSeconds => _time;
 
-    internal Voice ToVoice(string name, int index)
+    /// <summary>Builds a single-voice composition from this track.</summary>
+    public Composition ToComposition()
     {
-        var instrument = _explicitInstrument ?? Instruments.All[index % Instruments.All.Count];
-        return new Voice(name, instrument, _notes);
-    }
-
-    internal Composition ToComposition()
-    {
-        var voice = ToVoice("track", 0);
+        var instrument = _explicitInstrument ?? Instruments.All[0];
+        var voice = new Voice("track", instrument, _notes);
         return new Composition(_tempo, new[] { voice });
     }
 
@@ -101,5 +102,11 @@ public sealed class Track
     {
         var samples = ToSamples();
         WavWriter.Write(path, samples);
+    }
+
+    internal Voice ToVoice(string name, int index)
+    {
+        var instrument = _explicitInstrument ?? Instruments.All[index % Instruments.All.Count];
+        return new Voice(name, instrument, _notes);
     }
 }
