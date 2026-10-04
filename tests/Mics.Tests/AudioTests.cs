@@ -51,8 +51,8 @@ public class RendererTests
         var note = new Note(440.0, 0, 0.1, 0.7);
         var voice = new Voice("t", Instruments.Sine, new[] { note });
         var comp = new Composition(120, new[] { voice });
-        var samples = Renderer.Render(comp, sampleRate: 1000);
-        Assert.Equal(100, samples.Length);
+        var samples = Renderer.Render(comp, sampleRate: 8000);
+        Assert.Equal(800, samples.Length);
     }
 
     [Fact]
@@ -62,8 +62,8 @@ public class RendererTests
         var v1 = new Voice("a", Instruments.Sine, new[] { note });
         var v2 = new Voice("b", Instruments.Triangle, new[] { note });
         var comp = new Composition(120, new[] { v1, v2 });
-        var samples = Renderer.Render(comp, sampleRate: 1000);
-        Assert.Equal(100, samples.Length);
+        var samples = Renderer.Render(comp, sampleRate: 8000);
+        Assert.Equal(800, samples.Length);
         foreach (var s in samples)
             Assert.InRange(s, -1.0, 1.0);
     }
@@ -75,7 +75,7 @@ public class RendererTests
         var n2 = new Note(440, 0, -1, 0.7);
         var voice = new Voice("t", Instruments.Sine, new[] { n1, n2 });
         var comp = new Composition(120, new[] { voice });
-        Assert.Empty(Renderer.Render(comp, sampleRate: 1000));
+        Assert.Empty(Renderer.Render(comp, sampleRate: 8000));
     }
 }
 
