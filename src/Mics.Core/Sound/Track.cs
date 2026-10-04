@@ -25,14 +25,21 @@ public sealed class Track
 
     private double BeatsToSeconds(double beats) => beats * 60.0 / _tempo;
 
-    /// <summary>Sets the tempo in beats per minute.</summary>
+    /// <summary>
+    /// Sets the tempo in beats per minute. Must be a positive, finite value.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bpm"/> is not positive or not finite.</exception>
     public Track Bpm(double bpm)
     {
+        if (!double.IsFinite(bpm) || bpm <= 0)
+            throw new ArgumentOutOfRangeException(nameof(bpm), bpm, "Tempo must be a positive, finite number.");
+
         _tempo = bpm;
         return this;
     }
 
     /// <summary>Forces a specific instrument (sine, triangle, square, sawtooth).</summary>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is not a known instrument.</exception>
     public Track Instrument(string name)
     {
         _explicitInstrument = Instruments.ByName(name)
@@ -40,9 +47,15 @@ public sealed class Track
         return this;
     }
 
-    /// <summary>Appends a single note for the given number of beats.</summary>
+    /// <summary>
+    /// Appends a single note for the given number of beats.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beats"/> is not positive or not finite.</exception>
     public Track Note(string name, double beats = 1.0)
     {
+        if (!double.IsFinite(beats) || beats <= 0)
+            throw new ArgumentOutOfRangeException(nameof(beats), beats, "Beats must be a positive, finite number.");
+
         var note = NoteName.Parse(name);
         var dur = BeatsToSeconds(beats);
         _notes.Add(new ScoreNote(note.Frequency, _time, dur, 0.7));
@@ -54,8 +67,12 @@ public sealed class Track
     public Track Chord(params string[] names) => Chord(1.0, names);
 
     /// <summary>Appends a chord with an explicit duration in beats.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beats"/> is not positive or not finite.</exception>
     public Track Chord(double beats, params string[] names)
     {
+        if (!double.IsFinite(beats) || beats <= 0)
+            throw new ArgumentOutOfRangeException(nameof(beats), beats, "Beats must be a positive, finite number.");
+
         var dur = BeatsToSeconds(beats);
         foreach (var name in names)
         {
@@ -66,9 +83,15 @@ public sealed class Track
         return this;
     }
 
-    /// <summary>Advances time without producing a sound.</summary>
+    /// <summary>
+    /// Advances time without producing a sound.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="beats"/> is negative or not finite.</exception>
     public Track Rest(double beats = 1.0)
     {
+        if (!double.IsFinite(beats) || beats < 0)
+            throw new ArgumentOutOfRangeException(nameof(beats), beats, "Beats must be a non-negative, finite number.");
+
         _time += BeatsToSeconds(beats);
         return this;
     }

@@ -11,9 +11,15 @@ public sealed class SongBuilder
     private readonly List<(string Name, Track Track)> _voices = new();
     private double _tempo = 120.0;
 
-    /// <summary>Sets the global tempo in beats per minute.</summary>
+    /// <summary>
+    /// Sets the global tempo in beats per minute. Must be a positive, finite value.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="bpm"/> is not positive or not finite.</exception>
     public SongBuilder Tempo(double bpm)
     {
+        if (!double.IsFinite(bpm) || bpm <= 0)
+            throw new ArgumentOutOfRangeException(nameof(bpm), bpm, "Tempo must be a positive, finite number.");
+
         _tempo = bpm;
         return this;
     }
@@ -23,8 +29,13 @@ public sealed class SongBuilder
         => Voice(name, instrument: null, configure);
 
     /// <summary>Adds a voice with a specific instrument.</summary>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="name"/> or <paramref name="configure"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when the instrument name is not known.</exception>
     public SongBuilder Voice(string name, string? instrument, Func<Track, Track> configure)
     {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var track = new Track().Bpm(_tempo);
         if (instrument is not null)
             track.Instrument(instrument);
